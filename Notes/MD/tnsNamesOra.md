@@ -1,3 +1,10 @@
+USCC_L1_SERVICE =
+(DESCRIPTION =
+(ADDRESS = (PROTOCOL = TCP)(HOST = ocscl1by20dva019.logistics.fedex.com)(PORT = 1521)
+)
+(CONNECT_DATA =
+(SERVICE_NAME = ALPL2WM_service.ocifxldevfsc1.ocifxldevlanvcn.oraclevcn.com)
+)
 USCC_L2_SERVICE =
 (DESCRIPTION =
 (ADDRESS = (PROTOCOL = TCP)(HOST = ocscl2by20dva019.logistics.fedex.com)(PORT = 1521)
