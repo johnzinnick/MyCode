@@ -1,0 +1,31 @@
+let
+    Source = Table.NestedJoin(IQData, {"IMEI"}, WMS, {"dtlnum"}, "WMS", JoinKind.FullOuter),
+    #"Expanded WMS" = Table.ExpandTableColumn(Source, "WMS", {"rmaact_id", "dtlnum", "rmanum", "prtnum", "rcvsts", "rtnrsncod", "stoloc", "adddte", "mod_usr_id", "rmatyp", "devcod", "prtfam", "untcst", "Make", "Model"}, {"WMS.rmaact_id", "WMS.dtlnum", "WMS.rmanum", "WMS.prtnum", "WMS.rcvsts", "WMS.rtnrsncod", "WMS.stoloc", "WMS.adddte", "WMS.mod_usr_id", "WMS.rmatyp", "WMS.devcod", "WMS.prtfam", "WMS.untcst", "WMS.Make", "WMS.Model"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Expanded WMS",{{"DateTested", type date}}),
+    #"Added Conditional Column" = Table.AddColumn(#"Changed Type", "Pass/Fail/Unknown", each if [Pass] = 1 then "PASS" else if [Pass] = 0 then "FAIL" else "UNKNOWN"),
+    #"Added Conditional Column1" = Table.AddColumn(#"Added Conditional Column", "NewMake", each if [Vendor] = null then [WMS.Make] else [Vendor]),
+    #"Added Conditional Column2" = Table.AddColumn(#"Added Conditional Column1", "NewModel", each if [Model] = null then [WMS.Model] else [Model]),
+    #"Added Conditional Column3" = Table.AddColumn(#"Added Conditional Column2", "NewIMEI", each if [IMEI] = null then [WMS.dtlnum] else [IMEI]),
+    #"Added Conditional Column4" = Table.AddColumn(#"Added Conditional Column3", "NewDate", each if [DateTested] = null then [WMS.adddte] else [DateTested]),
+    #"Removed Columns" = Table.RemoveColumns(#"Added Conditional Column4",{"WMS.Model", "WMS.Make", "Vendor", "Model", "Pass","IMEI","DateTested","WMS.dtlnum","WMS.adddte"})
+in
+    #"Removed Columns"
+	
+	
+	
+	
+	let
+    Source = Table.NestedJoin(tmowmsdata, {"dtlnum"}, #"IQDB TMO Clear", {"IMEI"}, "IQDB TMO Clear", JoinKind.FullOuter),
+    #"Expanded IQDB TMO Clear" = Table.ExpandTableColumn(Source, "IQDB TMO Clear", {"UniqueID", "IMEI", "Vendor", "Model", "Pass", "DateTested", "Station", "Port"}, {"IQDB TMO Clear.UniqueID", "IQDB TMO Clear.IMEI", "IQDB TMO Clear.Vendor", "IQDB TMO Clear.Model", "IQDB TMO Clear.Pass", "IQDB TMO Clear.DateTested", "IQDB TMO Clear.Station", "IQDB TMO Clear.Port"}),
+    #"Added Conditional Column" = Table.AddColumn(#"Expanded IQDB TMO Clear", "Pass/Fail/Unknow", each if [IQDB TMO Clear.Pass] = 1 then "PASS" else if [IQDB TMO Clear.Pass] = 0 then "FAIL" else "Unknown"),
+    #"Added Conditional Column1" = Table.AddColumn(#"Added Conditional Column", "TestDate", each if [IQDB TMO Clear.DateTested] = null then [adddte] else [IQDB TMO Clear.DateTested]),
+    #"Added Conditional Column2" = Table.AddColumn(#"Added Conditional Column1", "NewIMEI", each if [dtlnum] = null then [IQDB TMO Clear.IMEI] else [IQDB TMO Clear.IMEI]),
+    #"Added Conditional Column3" = Table.AddColumn(#"Added Conditional Column2", "NewMake", each if [IQDB TMO Clear.Vendor] = null then [lngdsc.1] else [IQDB TMO Clear.Vendor]),
+    #"Added Conditional Column4" = Table.AddColumn(#"Added Conditional Column3", "NewModel", each if [IQDB TMO Clear.Model] = null then [Model] else [IQDB TMO Clear.Model]),
+    #"Removed Columns" = Table.RemoveColumns(#"Added Conditional Column4",{"IQDB TMO Clear.Pass"}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Removed Columns",{"adddte", "IQDB TMO Clear.DateTested"}),
+    #"Removed Columns2" = Table.RemoveColumns(#"Removed Columns1",{"dtlnum", "IQDB TMO Clear.IMEI"}),
+    #"Removed Columns3" = Table.RemoveColumns(#"Removed Columns2",{"lngdsc.1", "Model", "IQDB TMO Clear.Vendor", "IQDB TMO Clear.Model"}),
+    #"Removed Columns4" = Table.RemoveColumns(#"Removed Columns3",{"rcvsts", "rmatyp", "devcod", "prtfam", "untcst", "IQDB TMO Clear.Station", "IQDB TMO Clear.Port"})
+in
+    #"Removed Columns4"

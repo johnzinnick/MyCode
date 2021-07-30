@@ -1,0 +1,49 @@
+Assurant - Detect
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""Assurant - Detect"" as `Function`, ""Assurant"" as `Customer`, ""Detect"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_Assure` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"
+	
+Assurant - SOH
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""Assurant - SOH"" as `Function`, ""Assurant"" as `Customer`, ""SOH"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_Assure_SOH` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;#(lf)#(lf)"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"
+Dell - Detect
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""Dell - Detect"" as `Function`, ""Dell"" as `Customer`, ""Detect"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_Dell` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"
+
+Dell DFS - Detect
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""Dell DFS - Detect"" as `Function`, ""Dell"" as `Customer`, ""Detect"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_DellDFS` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"
+
+External ReMan Provider - Test - Battery State Of Health
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""External ReMan Provider - Test - Battery State Of Health"" as `Function`, ""External ReMan Provider"" as `Customer`, ""SOH"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_EXT_SOH` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""Genco MarketPlace - Clear"" as `Function`, ""Genco Market Place"" as `Customer`, ""Clear"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_GMP` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""RELCD - Info ?"" as `Function`, ""???"" as `Customer`, ""???"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_RELCD` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"
+
+let
+    Source = MySQL.Database("ocscl6inqapp02.logistics.fedex.com", "pfprd", [ReturnSingleDatabase=true, Query="SELECT ""RePackaging - Info?"" as `Function`, ""AT&T"" as `Customer`, ""???"" as `Product`, Count(*) as `Volume`, DATE_FORMAT(  `DateTested` ,  '%b-01-%y' ) as TheMonth   FROM  `CPIToolTestResults_RePackaging` WHERE  `DateTested` BETWEEN (DATE_SUB(DATE_SUB(NOW(), INTERVAL 13 MONTH), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) AND (DATE_SUB(NOW(), INTERVAL DAYOFMONTH(NOW())-1 DAY) - TIME(NOW())) Group By TheMonth;"]),
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"TheMonth", type date}})
+in
+    #"Changed Type"

@@ -1,0 +1,14 @@
+
+--Combine
+let
+    Source = Table.Combine({#"USCC - Clear", #"USCC - Test - Battery State Of Health", #"USCC - Flash", #"USCC - InQuest Test", #"USCC - FMIP", #"Assurant - Detect", #"Assurant - SOH", #"Dell - Detect", #"Dell DFS - Detect", #"Genco MarketPlace - Clear", #"AT&T Receiving (NEXT) - Clear", #"AT&T Receiving (NEXT Exceptions) - Flash", #"AT&T Receiving - Insurance - Clear", #"AT&T Receiving - Identify", #"AT&T IQA - Detect", #"AT&T XBM - Battery State Of Health", #"AT&T Apple Test and Repair - Detect", #"AT&T Test and Repair - InQuest Test - Apple", #"AT&T Test and Repair - InQuest Test - Android", #"AT&T Apple Test and Repair - Clear", #"AT&T Apple Test and Repair - Flash", #"AT&T Apple Test and Repair -   Zero Minute - Flash", #"AT&T Apple T&R - Test - Battery State of Health", #"AT&T T&R - Test - Android Battery State Of Health", #"AT&T Apple T&R - Test - Find My iPhone", #"AT&T ARY - Clear", #"AT&T ARY - Cable Test", #"AT&T - Clear Shot - Clear", #"AT&T - Clear Shot - Flash", #"AT&T MSS - Detect", #"AT&T MSS - Config", #"AT&T - FWN Special Project - Detect", #"AT&T DPAR - Clear", #"T-Mobile AWRE Receiving - Identify", #"T-Mobile AWRE AQL - Detect", #"T-Mobile AWRE AQL - Detect Only", #"T-Mobile AWRE - NA - Flash", #"T-Mobile AWRE -  Zero Minute - Flash", #"T-Mobile AWRE - Zero Minute - Not Activated - Flash", #"T-Mobile iPhone Repair - Triage - Flash", #"T-Mobile iPhone Repair - Clear", #"T-Mobile iPhone Repair - Detect", #"T-Mobile iPhone Repair - Flash", #"T-Mobile iPhone Repair - Test - Battery State Of Health", #"T-Mobile AWRE - Triage - InQuest Test", #"T-Mobile iPhone Repair - InQuest Test", #"T-Mobile AWRE -  Flash", #"T-Mobile AWRE Receiving - Clear", #"T-Mobile AWRE - A-Stock Triage - Identify", #"External ReMan Provider - Test - Battery State Of Health", #"T-Mobile AWRE - FMIP Check - Identify", #"AT&T Zero Minute GSX Check", #"AT&T Zero Minute Erasure"}),
+    #"Filtered Rows" = Table.SelectRows(Source, each true)
+in
+    #"Filtered Rows"
+
+--FunctionOrdering
+let
+    Source = Excel.CurrentWorkbook(){[Name="FunctionOrdering"]}[Content],
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Order", Int64.Type}, {"Function", type text}})
+in
+    #"Changed Type"
