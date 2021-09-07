@@ -1,0 +1,62 @@
+StartYear (current value = 2018)
+EndYear (current value = 2030)
+StartOfFiscalYear (current value = 6)
+
+
+
+let
+    StartDate = #date(StartYear,1,1),
+    EndDate = #date(EndYear,12,31),
+    NumberOfDays = Duration.Days( EndDate - StartDate ),
+    Dates = List.Dates(StartDate, NumberOfDays+1, #duration(1,0,0,0)),
+    #"Converted to Table" = Table.FromList(Dates, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "FullDateAlternateKey"}}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"FullDateAlternateKey", type date}}),
+    #"Inserted Year" = Table.AddColumn(#"Changed Type", "Year", each Date.Year([FullDateAlternateKey]), type number),
+    #"Inserted Month" = Table.AddColumn(#"Inserted Year", "Month", each Date.Month([FullDateAlternateKey]), type number),
+    #"Inserted Month Name" = Table.AddColumn(#"Inserted Month", "Month Name", each Date.MonthName([FullDateAlternateKey]), type text),
+    #"Inserted Quarter" = Table.AddColumn(#"Inserted Month Name", "Quarter", each Date.QuarterOfYear([FullDateAlternateKey]), type number),
+    #"Inserted Week of Year" = Table.AddColumn(#"Inserted Quarter", "Week of Year", each Date.WeekOfYear([FullDateAlternateKey]), type number),
+    #"Inserted Week of Month" = Table.AddColumn(#"Inserted Week of Year", "Week of Month", each Date.WeekOfMonth([FullDateAlternateKey]), type number),
+    #"Inserted Day" = Table.AddColumn(#"Inserted Week of Month", "Day", each Date.Day([FullDateAlternateKey]), type number),
+    #"Inserted Day of Week" = Table.AddColumn(#"Inserted Day", "Day of Week", each Date.DayOfWeek([FullDateAlternateKey]), type number),
+    #"Inserted Day of Year" = Table.AddColumn(#"Inserted Day of Week", "Day of Year", each Date.DayOfYear([FullDateAlternateKey]), type number),
+    #"Inserted Day Name" = Table.AddColumn(#"Inserted Day of Year", "Day Name", each Date.DayOfWeekName([FullDateAlternateKey]), type text),
+    #"Added Custom" = Table.AddColumn(#"Inserted Day Name", "Fiscal Year", each if [Month]>=StartOfFiscalYear
+then [Year]+1
+else [Year]),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Fiscal Year", Int64.Type}}),
+    #"Added Custom1" = Table.AddColumn(#"Changed Type1", "Fiscal Period", each if [Month]>=StartOfFiscalYear
+then [Month]-(StartOfFiscalYear-1)
+else [Month]+(12-StartOfFiscalYear+1)),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom1",{{"Fiscal Period", Int64.Type}}),
+    #"Inserted Division" = Table.AddColumn(#"Changed Type2", "Inserted Division", each [Fiscal Period] / 3, type number),
+    #"Rounded Up" = Table.TransformColumns(#"Inserted Division",{{"Inserted Division", Number.RoundUp, Int64.Type}}),
+    #"Renamed Columns1" = Table.RenameColumns(#"Rounded Up",{{"Inserted Division", "Fiscal Quarter"}}),
+    #"Inserted Last Characters" = Table.AddColumn(#"Renamed Columns1", "Last Characters", each "FY" & Text.End(Text.From([FullDateAlternateKey], "en-US"), 2), type text),
+    #"Renamed Columns2" = Table.RenameColumns(#"Inserted Last Characters",{{"Last Characters", "FY"}}),
+    #"Inserted Start of Year" = Table.AddColumn(#"Renamed Columns2", "Start of Year", each Date.StartOfYear([FullDateAlternateKey]), type date),
+    #"Removed Columns" = Table.RemoveColumns(#"Inserted Start of Year",{"Start of Year"}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Removed Columns",{"FullDateAlternateKey", "Year", "Month", "Month Name", "Quarter", "Week of Year", "Week of Month", "Day", "Day of Week", "Day of Year", "Day Name", "FY", "Fiscal Year", "Fiscal Period", "Fiscal Quarter"}),
+    #"Inserted Merged Column" = Table.AddColumn(#"Reordered Columns", "FYPN", each Text.Combine({Text.From([Fiscal Year], "en-US"), Text.From([Fiscal Period], "en-US")}, ""), type text),
+    #"Reordered Columns1" = Table.ReorderColumns(#"Inserted Merged Column",{"FullDateAlternateKey", "Year", "Month", "Month Name", "Quarter", "Week of Year", "Week of Month", "Day", "Day of Week", "Day of Year", "Day Name", "FY", "Fiscal Year", "Fiscal Period", "FYPN", "Fiscal Quarter"}),
+    #"Inserted Merged Column1" = Table.AddColumn(#"Reordered Columns1", "FYQN", each Text.Combine({Text.From([Fiscal Year], "en-US"), Text.From([Fiscal Quarter], "en-US")}, ""), type text),
+    #"Renamed Columns3" = Table.RenameColumns(#"Inserted Merged Column1",{{"FYPN", "FYP"}, {"FYQN", "FYQ"}}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Renamed Columns3",{"FY"}),
+    #"Added Index" = Table.AddIndexColumn(#"Removed Columns1", "Index", 0, 1, Int64.Type),
+    #"Added Custom2" = Table.AddColumn(#"Added Index", "Fiscal Period LZ", each Text.PadStart(Text.From([Fiscal Period]),2,"0")),
+    #"Added Custom3" = Table.AddColumn(#"Added Custom2", "FYP LZ", each [Fiscal Year] & [Fiscal Period LZ]),
+    #"Removed Columns2" = Table.RemoveColumns(#"Added Custom3",{"FYP LZ"}),
+    #"Changed Type3" = Table.TransformColumnTypes(#"Removed Columns2",{{"Fiscal Period LZ", type text}}),
+    #"Inserted Merged Column2" = Table.AddColumn(#"Changed Type3", "FYP LZ", each Text.Combine({Text.From([Fiscal Year], "en-US"), [Fiscal Period LZ]}, ""), type text)
+in
+    #"Inserted Merged Column2"
+
+
+
+Date Key = pq_fiscal_calendar[FullDateAlternateKey].[Date]
+FY = CONCATENATE("FY",RIGHT(pq_fiscal_calendar[Fiscal Year],2))
+FYM = CONCATENATE(pq_fiscal_calendar[FY],(CONCATENATE(" - ",pq_fiscal_calendar[Month Name])))
+Int Date = pq_fiscal_calendar[FullDateAlternateKey].[Date] (format date using international formatting)
+Week End Date = pq_fiscal_calendar[FullDateAlternateKey].[Date] - WEEKDAY(pq_fiscal_calendar[FullDateAlternateKey].[Date],1) + 7
+Week Start Date = pq_fiscal_calendar[FullDateAlternateKey].[Date] - WEEKDAY(pq_fiscal_calendar[FullDateAlternateKey].[Date],1) + 1

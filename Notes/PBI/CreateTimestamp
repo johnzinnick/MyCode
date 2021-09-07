@@ -1,0 +1,13 @@
+let
+    Source = DateTime.LocalNow(),
+    #"Converted to Table" = #table(1, {{Source}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "DateTime"}}),
+    #"Duplicated Column" = Table.DuplicateColumn(#"Renamed Columns", "DateTime", "DateTime - Copy"),
+    #"Renamed Columns1" = Table.RenameColumns(#"Duplicated Column",{{"DateTime - Copy", "Date"}}),
+    #"Extracted Date" = Table.TransformColumns(#"Renamed Columns1",{{"Date", DateTime.Date, type date}}),
+    #"Duplicated Column1" = Table.DuplicateColumn(#"Extracted Date", "DateTime", "DateTime - Copy"),
+    #"Renamed Columns2" = Table.RenameColumns(#"Duplicated Column1",{{"DateTime - Copy", "Time"}}),
+    #"Extracted Time" = Table.TransformColumns(#"Renamed Columns2",{{"Time", DateTime.Time, type time}}),
+    #"Added Custom" = Table.AddColumn(#"Extracted Time", "Converted", each [DateTime]-#duration(0, 6, 0, 0))
+in
+    #"Added Custom"

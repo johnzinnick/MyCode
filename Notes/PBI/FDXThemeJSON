@@ -1,0 +1,28 @@
+{ 
+    "name": "FDX", 
+    "dataColors": ["#4d148c",  "#999999", "#666666", "#000000","#ff6200", "#333333", "#fafafa", "#f2f2f2", "#e3e3e3", "#009900", "#f7b118", "#e8002e", "#007AB7"  ],
+    "background":"#FFFFFF",
+    "foreground": "#999999",
+    "tableAccent": "#4d148c",
+    "visualStyles": {
+    "slicer": {
+         "*":{
+             "header": [{
+               "show": true,
+               "fontColor": { "solid": { "color": "#ffffff"}},
+               "background": { "solid": { "color": "#4d148c"}},
+               "outline": "None",
+               "textSize": 10,
+               "fontFamily": "Arial"
+            }],
+            "items": [{
+               "fontColor": { "solid": { "color": "#666666"}},
+               "background": { "solid": { "color": ""}},
+               "outline": "None",
+               "textSize": 10,
+               "fontFamily": "Arial"
+               }]
+            }
+         }
+   }
+}

@@ -1,0 +1,7 @@
+{
+    "name": "ExpressHR",
+    "dataColors": ["#4D148C", "#FF6200", "#999999", "#666666", "#000000", "#007AB7", "#333333", "#FAFAFA", "#F2F2F2", "#E3E3E3", "#009900", "#F7B118", "#E8002E"],
+    "background":"#FFFFFF",
+    "foreground": "#45148C",
+    "tableAccent": "#45148C"
+}
